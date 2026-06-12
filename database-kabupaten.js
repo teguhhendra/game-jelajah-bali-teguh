@@ -11,7 +11,7 @@ const databaseKabupaten = {
         captionProfil: "Kantor Pemerintahan Kabupaten Badung",
 
         "bentang-alam": { 
-            "Pantai Selatan": { teks: "Kawasan Kuta, Jimbaran, dan Nusa Dua yang menjadi pusat pariwisata dunia.", foto: "badung-pantai.png", caption: "Keindahan Pantai di Badung Selatan" }, 
+            "Pantai Selatan": { teks: "Kawasan Kuta, Jimbaran, dan Nusa Dua yang menjadi pusat pariwisata dunia.", foto: "badung-pantai-kuta.png", caption: "Keindahan Pantai di Badung Selatan" }, 
             "Tebing Uluwatu": { teks: "Tebing kapur tinggi menghadap Samudra Hindia, pusat wisata budaya dan religi.", foto: "badung-uluwatu.png", caption: "Tebing Uluwatu yang Megah" }, 
             "Pegunungan Petang": { teks: "Wilayah utara yang berhawa sejuk, sentra pertanian dan perkebunan hortikultura.", foto: "badung-petang.png", caption: "Perkebunan di Petang" } 
         },
