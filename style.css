@@ -662,3 +662,14 @@ body { width: 100vw; height: 100vh; overflow: hidden; font-family: 'Arial', sans
     border-radius: 20px; 
     border: 3px solid gold;
 }
+
+/* Pastikan sidebar pembungkus Anda memiliki style ini */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.sidebar-footer {
+    margin-top: auto; /* Ini kunci agar dia selalu terdorong ke bawah */
+}
