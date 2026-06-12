@@ -1,0 +1,664 @@
+/* 
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    width:100vw;
+    height:100vh;
+    overflow:hidden;
+    font-family:Arial, sans-serif;
+}
+
+#game-background{
+    position:fixed;
+    inset:0;
+    background-size:cover;
+    background-position:center;
+    z-index:-2;
+}
+
+#overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.5);
+    display:none;
+    z-index:50;
+}
+
+.scene{
+    display:none;
+    width:100%;
+    height:100%;
+}
+
+.scene.active{
+    display:flex;
+}
+
+#top-nav{
+    position:fixed;
+    top:15px;
+    right:15px;
+
+    display:flex;
+    gap:10px;
+
+    z-index:100;
+}
+
+.nav-btn{
+    width:50px;
+    height:50px;
+    cursor:pointer;
+}
+
+#sidebar-toggle{
+    position:fixed;
+    left:10px;
+    top:50%;
+
+    transform:translateY(-50%);
+
+    width:45px;
+    height:90px;
+
+    z-index:101;
+}
+
+#sidebar{
+    position:fixed;
+
+    left:-260px;
+    top:0;
+
+    width:250px;
+    height:100%;
+
+    background:white;
+
+    transition:.3s;
+
+    z-index:102;
+
+    padding:20px;
+}
+
+#sidebar.open{
+    left:0;
+}
+
+.sidebar-title{
+    font-weight:bold;
+    margin-bottom:20px;
+}
+
+.kabupaten-btn{
+    width:100%;
+    padding:10px;
+    margin-bottom:8px;
+}
+
+.login-box{
+    width:500px;
+    margin:auto;
+
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+
+    text-align:center;
+}
+
+.login-box input{
+    padding:12px;
+}
+
+.login-box button{
+    padding:15px;
+}
+
+.briefing-box{
+    width:800px;
+    margin:auto;
+}
+
+#scene-kabupaten{
+    flex-direction:column;
+    padding:80px 40px;
+}
+
+#welcome-kabupaten{
+    margin:auto;
+    font-size:24px;
+    text-align:center;
+}
+
+#kabupaten-content{
+    display:none;
+
+    width:100%;
+    height:100%;
+}
+
+#kategori-menu{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:20px;
+}
+
+.kategori-btn{
+    padding:10px 15px;
+}
+
+.dropdown-menu{
+    display:none;
+
+    position:absolute;
+
+    background:white;
+
+    border:1px solid #ccc;
+}
+
+.dropdown-group:hover .dropdown-menu{
+    display:flex;
+    flex-direction:column;
+}
+
+#info-area{
+    width:55%;
+    height:70%;
+
+    border:2px solid black;
+
+    padding:20px;
+
+    float:left;
+}
+
+#photo-area{
+    width:40%;
+    height:70%;
+
+    float:right;
+}
+
+#photo-preview{
+    height:90%;
+
+    border:2px solid black;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+#photo-title{
+    text-align:center;
+    margin-top:10px;
+}
+
+.badge-box{
+    width:900px;
+    margin:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    border:1px solid black;
+    padding:10px;
+}
+
+/* ========================= */
+/* OVERLAY */
+/* ========================= */
+
+/*
+#overlay{
+    display:none;
+
+    position:fixed;
+    inset:0;
+
+    background:rgba(0,0,0,0.5);
+
+    z-index:90;
+}
+
+/* ========================= */
+/* SIDEBAR */
+/* ========================= */
+
+/*
+#sidebar{
+    z-index:100;
+}
+
+#sidebar-toggle{
+    z-index:110;
+}
+
+#top-nav{
+    z-index:120;
+}
+
+/* ========================= */
+/* BACKGROUND */
+/* ========================= */
+
+/*
+#game-background{
+    position:fixed;
+
+    inset:0;
+
+    background-size:cover;
+    background-position:center;
+
+    z-index:-1;
+}
+
+/* ========================= */
+/* ACTIVE SCENE */
+/* ========================= */
+/*
+.scene{
+    display:none;
+}
+
+.scene.active{
+    display:flex;
+}
+*/
+/* ========================================= */
+/* 1. RESET & DASAR */
+/* ========================================= */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { width: 100vw; height: 100vh; overflow: hidden; font-family: 'Arial', sans-serif; }
+
+#game-background {
+    position: fixed; inset: 0;
+    background-size: cover; background-position: center;
+    z-index: -2;
+}
+
+/* ========================================= */
+/* 2. KONTINER UTAMA (Dibuat Seragam) */
+/* ========================================= */
+.scene {
+    display: none; 
+    width: 100%; 
+    height: 100%;
+    justify-content: center; 
+    align-items: center;
+    /* Tambahkan bagian ini */
+    opacity: 0; 
+    transition: opacity 0.6s ease-in-out; 
+    position: absolute; /* Penting agar scene bertumpuk saat animasi */
+}
+
+.scene.active { 
+    display: flex; 
+    opacity: 1; 
+}
+/* Semua box menggunakan gaya yang sama */
+.login-box, .briefing-box, .badge-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    padding: 60px;
+    border-radius: 10px;
+    border: 3px solid #333;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    text-align: center;
+}
+
+.login-box { width: 900px; gap: 20px; }
+.briefing-box { width: 1200px; text-align: left; align-items: flex-start; gap: 20px; }
+.badge-box { width: 900px; }
+
+/* ========================================= */
+/* 3. INPUT & TOMBOL DALAM BOX */
+/* ========================================= */
+.login-box input {
+    width: 100%; padding: 20px; font-size: 1.5em;
+    border: 2px solid #333; border-radius: 5px;
+}
+
+.login-box button, .briefing-box button {
+    width: 100%; padding: 20px; font-size: 1.8em;
+    background: #8bc34a; color: white; font-weight: bold;
+    border: 2px solid #333; cursor: pointer;
+}
+
+/* ========================================= */
+/* 4. NAVIGASI & SIDEBAR */
+/* ========================================= */
+#top-nav {
+    position: fixed; top: 15px; right: 15px;
+    display: none; gap: 10px; z-index: 120;
+}
+
+.nav-btn {
+    width: 70px; height: 70px; cursor: pointer;
+    border-radius: 50%; border: 2px solid #333;
+    background: rgba(223, 114, 114, 0.5);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    font-size: 30px; transition: 0.3s;
+}
+
+.nav-btn:hover { transform: scale(1.1); background: #e98181; }
+
+/* Tombol Toggle */
+#sidebar-toggle {
+    position: fixed; 
+    top: 50%; 
+    transform: translateY(-50%);
+    width: 30px; height: 60px;
+    z-index: 1100;
+    transition: left 0.3s ease; /* Transisi ini kunci perpindahannya */
+    border-radius: 0 10px 10px 0;
+    cursor: pointer;
+    background: #fff;
+    border: 1px solid #333;
+    left: 0; /* Posisi default */
+}
+
+/* Jika sidebar terbuka, tombol bergeser */
+#sidebar.open ~ #sidebar-toggle {
+    left: 250px; /* Pas di ujung sidebar */
+}
+
+/* SAAT SIDEBAR OPEN: Pindahkan tombol ke 250px (tepat di ujung sidebar) */
+
+#sidebar {
+    position: fixed; 
+    left: -260px; 
+    top: 0;
+    width: 250px; 
+    height: 100%;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 1000; /* Pastikan di atas overlay dan container */
+    padding: 20px;
+    transition: 0.3s;
+    border-right: 2px solid #333;
+    
+    /* Gabungkan dengan flexbox untuk tata letak tombol */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#sidebar.open {
+    left: 0; 
+}
+
+#overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; z-index: 90; }
+
+/* Layout Kabupaten yang Dinamis */
+.kabupaten-container {
+    display: grid;
+    /* Mengatur "nama-nama" area grid */
+    grid-template-areas: 
+        "header header"
+        "info foto"
+        "info namafoto";
+    /* Info 2 kali lebih lebar dari foto (2fr ke 1fr) */
+    grid-template-columns: 2fr 1fr;
+    /* Header dan Nama Foto tinggi otomatis, Info/Foto isi sisanya */
+    grid-template-rows: auto 1fr auto;
+    gap: 15px; /* Jarak antar kotak */
+    width: 90%; height: 80vh;
+    margin: 50px auto;
+    max-width: 1400px; /* Batasi lebar di layar besar */
+    box-sizing: border-box;
+}
+
+
+
+/*
+.menu-atas { grid-area: header; display: flex; gap: 10px; padding: 10px; background: rgba(255,255,255,0.8); }
+.area-informasi { grid-area: info; background: rgba(255,255,255,0.8); padding: 20px; overflow-y: auto; }
+.area-foto { grid-area: foto; background: #ddd; display: flex; align-items: center; justify-content: center; }
+.nama-foto { grid-area: namafoto; background: #ccc; text-align: center; padding: 5px; }
+*/
+
+.menu-atas, .area-informasi, .area-foto, .nama-foto {
+    background: rgba(255, 255, 255, 0.5); /* Putih Transparan (Glassmorphism) */
+    backdrop-filter: blur(10px); /* Efek Blur */
+    border-radius: 10px; /* Sudut Tumpul */
+    border: 2px solid #333; /* Batas Hitam Jelas */
+    padding: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    box-sizing: border-box;
+}
+
+.menu-atas { 
+    grid-area: header; 
+    display: flex; 
+    gap: 10px; 
+    padding: 10px; 
+    background: rgba(255,255,255,0.8);
+    position: relative;
+    z-index: 200; /* Harus lebih tinggi dari area informasi */
+}
+
+.area-informasi { 
+    grid-area: info; 
+    padding: 20px; 
+    overflow-y: auto; /* Scroll vertikal di dalam kotak */
+    z-index: 1;
+}
+
+.area-foto { 
+    grid-area: foto; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    color: #555; 
+    overflow: hidden; 
+}
+
+.area-foto span { font-weight: bold; font-size: 1.2em; }
+
+.area-foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Foto memenuhi kotak tanpa distorsi */
+}
+
+.nama-foto { 
+    grid-area: namafoto; 
+    text-align: center; 
+    font-weight: bold; 
+    padding: 5px; 
+}
+
+/* Dropdown */
+/*
+.menu-dropdown { position: relative; display: inline-block; }
+.dropdown-content { display: none; position: absolute; background: white; min-width: 150px; z-index: 100; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+.menu-dropdown:hover .dropdown-content { display: block; }
+.dropdown-item { display: block; width: 100%; padding: 10px; border: none; background: none; text-align: left; }
+.dropdown-item:hover { background: #f0f0f0; }
+
+.kategori-btn {
+    padding: 10px 15px;
+    background: #fff;
+    border: 1px solid #333;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+}
+.kategori-btn:hover { background: #e0e0e0; }
+
+/* Menghilangkan scrollbar agar terlihat rapi */
+/*
+.area-informasi::-webkit-scrollbar { width: 8px; }
+.area-informasi::-webkit-scrollbar-thumb { background: #888; border-radius: 5px; }
+*/
+
+.menu-dropdown { 
+    position: relative; 
+    display: inline-block; 
+}
+
+.kategori-btn {
+    padding: 8px 12px;
+    background: #fff;
+    border: 1px solid #333;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1em;
+}
+
+.kategori-btn:hover { background: #f0f0f0; }
+
+.dropdown-content { 
+    display: none; /* SEMBUNYIKAN SECARA DEFAULT */
+    position: absolute; 
+    top: 100%; /* Pas di bawah tombol */
+    left: 0;
+    background: white; 
+    border: 1px solid #333; 
+    border-radius: 5px;
+    min-width: 150px; 
+    z-index: 100; /* Pastikan di atas elemen lain */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2); 
+    padding: 5px 0;
+    z-index: 999; /* Z-Index sangat tinggi */
+}
+
+
+/* Tampilkan dropdown saat mouse di atas tombol */
+.menu-dropdown:hover .dropdown-content { 
+    display: block; 
+}
+
+.dropdown-item { 
+    display: block; 
+    width: 100%; 
+    padding: 10px 15px; 
+    border: none; 
+    background: none; 
+    text-align: left; 
+    cursor: pointer; 
+    font-size: 0.9em;
+}
+
+.dropdown-item:hover { background: #eee; }
+
+
+
+.sidebar-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #333;
+    padding-bottom: 5px;
+}
+
+.kabupaten-btn {
+    padding: 10px;
+    text-align: left;
+    background: #f8f8f8;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.kabupaten-btn:hover {
+    background: #e0e0e0;
+}
+
+.hidden { display: none !important; }
+
+.peta-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.welcome-box {
+    background: rgba(255, 255, 255, 0.4); /* Transparansi */
+    backdrop-filter: blur(15px); /* Efek kaca */
+    border: 5px solid #333; /* Border tebal sesuai permintaan */
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    color: #333;
+    display: inline-block; /* Agar box mengikuti besar teks */
+    margin-top: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+.welcome-box h1 {
+    font-size: 2.5em;
+    margin: 0 0 15px 0;
+    text-transform: uppercase;
+}
+
+.welcome-box p {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Styling Kuis */
+.quiz-box {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px solid #333;
+    margin-bottom: 10px;
+}
+
+.quiz-box label {
+    cursor: pointer;
+    display: block;
+    padding: 5px;
+    transition: 0.2s;
+}
+
+.quiz-box label:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* Badge/Lencana */
+.badge-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+#quiz-result-overlay {
+    display: none; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(0,0,0,0.9); 
+    z-index: 9999; 
+    justify-content: center; 
+    align-items: center; 
+    color: white;
+}
+
+.result-box {
+    text-align: center; 
+    padding: 40px; 
+    background: #222; 
+    border-radius: 20px; 
+    border: 3px solid gold;
+}
