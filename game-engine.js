@@ -33,6 +33,7 @@ const btnBadges = document.getElementById("btn-badges");
 
 const sidebar = document.getElementById("sidebar");
 const sidebarToggle = document.getElementById("sidebar-toggle");
+const toggleIcon = document.getElementById('toggle-icon');
 const overlay = document.getElementById("overlay");
 const topNav = document.getElementById("top-nav");
 const gameBackground = document.getElementById("game-background");
@@ -59,17 +60,30 @@ function setBackground(namaFile) {
 function openSidebar() {
     sidebar.classList.add("open");
     overlay.style.display = "block";
-    sidebarToggle.innerHTML = "<";
+    toggleIcon.innerText = "«";
 }
 
 function closeSidebar() {
     sidebar.classList.remove("open");
     overlay.style.display = "none";
-    sidebarToggle.innerHTML = ">";
+    toggleIcon.innerText = "»";
 }
 
 function toggleSidebar() {
-    sidebar.classList.contains("open") ? closeSidebar() : openSidebar();
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+    const toggleIcon = document.getElementById("toggle-icon"); // Pastikan ID ini ada di HTML
+
+    sidebar.classList.toggle("open");
+    
+    // Logika menampilkan/menyembunyikan overlay
+    if (sidebar.classList.contains("open")) {
+        overlay.style.display = "block";
+        toggleIcon.innerText = "«"; // Ikon Tutup
+    } else {
+        overlay.style.display = "none";
+        toggleIcon.innerText = "»"; // Ikon Buka
+    }
 }
 
 // =====================================================
@@ -227,20 +241,22 @@ function tampilkanKonten(idKab, kategori, subMenu = null) {
     if (!data) return;
 
     if (kategori === "profil") {
-        areaInfo.innerHTML = `<h3>Profil ${data.nama}</h3><p>${data.profil}</p>`;
-        // Tambahkan pengecekan agar tidak error jika fotoProfil kosong
+        // Kita gunakan <div class="konten-deskripsi"> sebagai wadah agar CSS kita bekerja optimal
+        areaInfo.innerHTML = `<h3>Profil ${data.nama}</h3><div class="konten-deskripsi">${data.profil}</div>`;
+        
         areaFoto.innerHTML = data.fotoProfil ? `<img src="assets/images/${data.fotoProfil}" alt="Profil">` : "";
         namaFoto.innerText = data.captionProfil || data.nama;
     } else {
-        // Tambahkan pengecekan apakah kategori dan subMenu ada
+        // Cek apakah kategori dan subMenu ada
         if (!data[kategori] || !data[kategori][subMenu]) return;
 
         const item = data[kategori][subMenu];
-        const judul = subMenu.replace(/([A-Z])/g, ' $1').trim();
+        // Jika nama subMenu mengandung tanda minus, kita bersihkan agar jadi spasi (contoh: bentang-alam jadi Bentang Alam)
+        const judul = subMenu.replace(/-/g, ' ').replace(/([A-Z])/g, ' $1').trim();
         
-        areaInfo.innerHTML = `<h3>${judul}</h3><p>${item.teks || ""}</p>`;
+        // Membungkus dengan div class="konten-deskripsi" agar format teks konsisten
+        areaInfo.innerHTML = `<h3>${judul}</h3><div class="konten-deskripsi">${item.teks || ""}</div>`;
         
-        // Menggunakan operator ternary untuk memastikan foto ada
         areaFoto.innerHTML = item.foto ? `<img src="assets/images/${item.foto}" alt="${judul}">` : "";
         namaFoto.innerText = item.caption || ""; 
     }
